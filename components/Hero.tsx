@@ -3,10 +3,12 @@
 import { useEffect, useRef } from "react";
 
 export default function Hero() {
-  const ref = useRef<HTMLElement>(null);
+  const sectionRef = useRef<HTMLElement>(null);
+  const canvasRef = useRef<HTMLCanvasElement>(null);
 
+  // フェードインアニメーション
   useEffect(() => {
-    const el = ref.current;
+    const el = sectionRef.current;
     if (!el) return;
     const observer = new IntersectionObserver(
       ([entry]) => {
@@ -21,12 +23,80 @@ export default function Hero() {
     return () => observer.disconnect();
   }, []);
 
+  // パーティクルアニメーション
+  useEffect(() => {
+    const prefersReducedMotion = window.matchMedia(
+      "(prefers-reduced-motion: reduce)"
+    ).matches;
+    if (prefersReducedMotion) return;
+
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return;
+
+    const setSize = () => {
+      const parent = canvas.parentElement;
+      if (!parent) return;
+      canvas.width = parent.offsetWidth;
+      canvas.height = parent.offsetHeight;
+    };
+    setSize();
+
+    const resizeObserver = new ResizeObserver(setSize);
+    if (canvas.parentElement) resizeObserver.observe(canvas.parentElement);
+
+    const particles = Array.from({ length: 25 }, () => ({
+      x: Math.random() * canvas.width,
+      y: Math.random() * canvas.height,
+      vx: (Math.random() - 0.5) * 0.25,
+      vy: (Math.random() - 0.5) * 0.25,
+      r: Math.random() * 1.2 + 0.4,
+      opacity: Math.random() * 0.15 + 0.12,
+    }));
+
+    let animId: number;
+
+    const animate = () => {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      for (const p of particles) {
+        p.x += p.vx;
+        p.y += p.vy;
+        if (p.x < 0) p.x = canvas.width;
+        if (p.x > canvas.width) p.x = 0;
+        if (p.y < 0) p.y = canvas.height;
+        if (p.y > canvas.height) p.y = 0;
+
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(26, 26, 26, ${p.opacity})`;
+        ctx.fill();
+      }
+      animId = requestAnimationFrame(animate);
+    };
+
+    animate();
+
+    return () => {
+      cancelAnimationFrame(animId);
+      resizeObserver.disconnect();
+    };
+  }, []);
+
   return (
     <section
-      ref={ref}
-      className="min-h-screen flex flex-col items-center justify-center px-6 py-24 opacity-0 translate-y-6 transition-all duration-1000 ease-out"
+      ref={sectionRef}
+      className="hero-grid relative min-h-screen flex flex-col items-center justify-center px-6 py-24 opacity-0 translate-y-6 transition-all duration-1000 ease-out"
     >
-      <div className="max-w-3xl mx-auto text-center">
+      {/* パーティクルCanvas */}
+      <canvas
+        ref={canvasRef}
+        className="absolute inset-0 pointer-events-none"
+        style={{ zIndex: 0 }}
+        aria-hidden="true"
+      />
+
+      <div className="relative max-w-3xl mx-auto text-center" style={{ zIndex: 10 }}>
         <p className="text-sm tracking-[0.3em] text-muted mb-8 font-sans font-light uppercase">
           Awama Inc.
         </p>
@@ -53,7 +123,10 @@ export default function Hero() {
       </div>
 
       {/* スクロールインジケーター */}
-      <div className="absolute bottom-12 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 opacity-40">
+      <div
+        className="absolute bottom-12 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 opacity-40"
+        style={{ zIndex: 10 }}
+      >
         <span className="text-xs tracking-widest font-sans text-secondary">scroll</span>
         <div className="w-px h-12 bg-secondary animate-pulse" />
       </div>

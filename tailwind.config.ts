@@ -12,7 +12,7 @@ const config: Config = {
         primary: "#0F172A",
         secondary: "#334155",
         accent: "#CA8A04",
-        background: "#F8FAFC",
+        background: "#F8F7F4",
         foreground: "#020617",
         muted: "#64748B",
         border: "#E2E8F0",

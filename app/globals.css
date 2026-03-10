@@ -10,11 +10,23 @@
   }
 
   body {
-    background-color: #F8FAFC;
+    background-color: #F8F7F4;
     color: #020617;
     font-family: 'Noto Sans JP', sans-serif;
     line-height: 1.75;
     font-size: 16px;
+  }
+
+  /* 和紙テクスチャ：SVGノイズフィルターを全面にオーバーレイ */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 9999;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.12'/%3E%3C/svg%3E");
+    background-size: 256px 256px;
+    background-repeat: repeat;
   }
 
   h1, h2, h3 {
@@ -24,7 +36,22 @@
   }
 }
 
+@layer base {
+  /* セクション間の細い区切り線（余白に自然に溶け込む形で） */
+  section + section {
+    border-top: 1px solid rgba(26, 26, 26, 0.1);
+  }
+}
+
 @layer utilities {
+  /* Heroセクション：格子線パターン */
+  .hero-grid {
+    background-image:
+      linear-gradient(rgba(26, 26, 26, 0.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(26, 26, 26, 0.04) 1px, transparent 1px);
+    background-size: 60px 60px;
+  }
+
   .animate-delay-100 { animation-delay: 100ms; }
   .animate-delay-200 { animation-delay: 200ms; }
   .animate-delay-300 { animation-delay: 300ms; }
