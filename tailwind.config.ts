@@ -9,17 +9,21 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        primary: "#0F172A",
-        secondary: "#334155",
-        accent: "#CA8A04",
         background: "#F8F7F4",
-        foreground: "#020617",
-        muted: "#64748B",
-        border: "#E2E8F0",
+        foreground: "#1A1A1A",
+        primary: "#1A1A1A",
+        secondary: "#6B6B6B",
+        muted: "#6B6B6B",
+        dark: "#111111",
+        border: "rgba(26, 26, 26, 0.1)",
+        accent: "#8A7A5C",
       },
       fontFamily: {
-        serif: ["Noto Serif JP", "serif"],
-        sans: ["Noto Sans JP", "sans-serif"],
+        serif: ["var(--font-noto-serif-jp)", "serif"],
+        sans: ["var(--font-dm-sans)", "var(--font-noto-serif-jp)", "sans-serif"],
+      },
+      maxWidth: {
+        content: "1100px",
       },
       animation: {
         "fade-in": "fadeIn 0.8s ease-out forwards",
