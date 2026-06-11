@@ -22,7 +22,8 @@ export default function Header() {
   }, [menuOpen]);
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-md border-b border-border">
+    <>
+      <header className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-md border-b border-border">
       <nav
         className="max-w-content mx-auto flex items-center justify-between px-6 h-16"
         aria-label="メインナビゲーション"
@@ -60,12 +61,13 @@ export default function Header() {
           {menuOpen ? <X size={22} aria-hidden="true" /> : <Menu size={22} aria-hidden="true" />}
         </button>
       </nav>
+      </header>
 
-      {/* SP メニュー */}
+      {/* SP メニュー（headerの backdrop-filter が fixed の基準を作るため、外側に配置） */}
       {menuOpen && (
         <div
           id="mobile-menu"
-          className="md:hidden fixed inset-0 top-16 bg-background/95 backdrop-blur-md"
+          className="md:hidden fixed inset-0 top-16 z-40 bg-background/95 backdrop-blur-md"
         >
           <ul className="flex flex-col items-center gap-10 pt-20">
             {navItems.map((item) => (
@@ -82,6 +84,6 @@ export default function Header() {
           </ul>
         </div>
       )}
-    </header>
+    </>
   );
 }
