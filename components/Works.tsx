@@ -56,21 +56,23 @@ function WorkCard({
   return (
     <div
       ref={ref}
-      className="opacity-0 translate-y-8 transition-all duration-700 ease-out bg-white border border-border p-8 sm:p-10 cursor-default hover:shadow-sm transition-shadow"
+      className="opacity-0 translate-y-8 transition-all duration-700 ease-out"
     >
-      <span className="inline-block text-xs tracking-widest text-accent font-sans font-medium border border-accent px-3 py-1 mb-6">
-        {item.tag}
-      </span>
-      <p className="text-xs tracking-[0.2em] text-muted font-sans mb-3 uppercase">
-        {item.industry}
-      </p>
-      <h3 className="text-base sm:text-lg font-serif font-semibold text-primary mb-4 leading-snug">
-        {item.challenge}
-      </h3>
-      <div className="w-8 h-px bg-border mb-4" />
-      <p className="text-sm text-secondary leading-relaxed font-sans font-light">
-        {item.solution}
-      </p>
+      <div className="group h-full bg-white border border-border p-8 sm:p-10 cursor-default transition-all duration-300 ease-out hover:-translate-y-2 hover:border-primary/30 hover:shadow-[0_20px_50px_rgba(15,23,42,0.10)]">
+        <span className="inline-block text-xs tracking-widest text-accent font-sans font-medium border border-accent px-3 py-1 mb-6 transition-colors duration-300 group-hover:bg-accent group-hover:text-white">
+          {item.tag}
+        </span>
+        <p className="text-xs tracking-[0.2em] text-muted font-sans mb-3 uppercase">
+          {item.industry}
+        </p>
+        <h3 className="text-lg sm:text-xl font-serif font-semibold text-primary mb-4 leading-snug">
+          {item.challenge}
+        </h3>
+        <div className="w-8 h-px bg-accent transition-all duration-500 ease-out group-hover:w-16 mb-4" />
+        <p className="text-sm text-secondary leading-relaxed font-sans font-light">
+          {item.solution}
+        </p>
+      </div>
     </div>
   );
 }
@@ -101,10 +103,11 @@ export default function Works() {
           ref={headingRef}
           className="opacity-0 translate-y-4 transition-all duration-700 ease-out mb-16"
         >
-          <p className="text-xs tracking-[0.3em] text-muted mb-4 font-sans uppercase">
+          <p className="flex items-center gap-4 text-xs tracking-[0.3em] text-accent mb-5 font-sans font-medium uppercase">
+            <span aria-hidden="true" className="inline-block w-10 h-px bg-accent" />
             Works
           </p>
-          <h2 className="text-2xl sm:text-3xl font-serif font-semibold text-primary">
+          <h2 className="text-3xl sm:text-5xl font-serif font-bold text-primary leading-tight">
             支援実績
           </h2>
         </div>

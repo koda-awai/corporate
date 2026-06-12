@@ -96,28 +96,53 @@ export default function Hero() {
         aria-hidden="true"
       />
 
-      <div className="relative max-w-3xl mx-auto text-center" style={{ zIndex: 10 }}>
-        <p className="text-sm tracking-[0.3em] text-muted mb-8 font-sans font-light uppercase">
+      {/* 背景の巨大アウトラインタイポ */}
+      <p
+        aria-hidden="true"
+        className="text-outline absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-[120%] font-serif font-bold text-[18vw] leading-none tracking-tight whitespace-nowrap select-none pointer-events-none"
+        style={{ zIndex: 1 }}
+      >
+        AWAMA
+      </p>
+
+      <div className="relative max-w-4xl mx-auto text-center" style={{ zIndex: 10 }}>
+        <p className="text-xs sm:text-sm tracking-[0.4em] text-accent mb-8 font-sans font-medium uppercase">
           Awama Inc.
         </p>
-        <h1 className="text-4xl sm:text-5xl md:text-6xl font-serif font-semibold text-primary leading-tight mb-8 tracking-wide">
-          あわい、から始める。
+        <h1 className="text-5xl sm:text-7xl md:text-8xl font-serif font-bold text-primary leading-[1.15] mb-10 tracking-wide">
+          あわい、
+          <br className="sm:hidden" />
+          から始める<span className="text-accent">。</span>
         </h1>
-        <p className="text-base sm:text-lg text-secondary leading-relaxed mb-12 max-w-xl mx-auto font-sans font-light">
+        <p className="text-base sm:text-xl text-secondary leading-relaxed mb-14 max-w-xl mx-auto font-sans font-light">
           思いと形の間に入り、本質から作る。
         </p>
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
           <a
             href="#contact"
-            className="inline-block px-8 py-4 bg-primary text-background text-sm tracking-widest font-sans font-medium hover:bg-secondary transition-colors duration-200 cursor-pointer focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
+            className="btn-sweep group inline-flex items-center justify-center gap-3 px-10 py-4 bg-primary text-background text-sm tracking-widest font-sans font-medium cursor-pointer focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
+            style={{ "--sweep-color": "#CA8A04" } as React.CSSProperties}
           >
             お問い合わせ
+            <span
+              aria-hidden="true"
+              className="inline-block transition-transform duration-300 ease-out group-hover:translate-x-1.5"
+            >
+              →
+            </span>
           </a>
           <a
             href="#works"
-            className="inline-block px-8 py-4 border border-primary text-primary text-sm tracking-widest font-sans font-medium hover:bg-primary hover:text-background transition-colors duration-200 cursor-pointer focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
+            className="btn-sweep group inline-flex items-center justify-center gap-3 px-10 py-4 border border-primary text-primary text-sm tracking-widest font-sans font-medium hover:text-background transition-colors duration-300 cursor-pointer focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
+            style={{ "--sweep-color": "#0F172A" } as React.CSSProperties}
           >
             実績を見る
+            <span
+              aria-hidden="true"
+              className="inline-block transition-transform duration-300 ease-out group-hover:translate-x-1.5"
+            >
+              →
+            </span>
           </a>
         </div>
       </div>
