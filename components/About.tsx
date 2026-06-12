@@ -29,22 +29,23 @@ export default function About() {
       className="py-24 sm:py-32 px-6 opacity-0 translate-y-6 transition-all duration-700 ease-out"
     >
       <div className="max-w-5xl mx-auto">
-        <p className="text-xs tracking-[0.3em] text-muted mb-4 font-sans uppercase">
+        <p className="flex items-center gap-4 text-xs tracking-[0.3em] text-accent mb-5 font-sans font-medium uppercase">
+          <span aria-hidden="true" className="inline-block w-10 h-px bg-accent" />
           About
         </p>
-        <h2 className="text-2xl sm:text-3xl font-serif font-semibold text-primary mb-16">
+        <h2 className="text-3xl sm:text-5xl font-serif font-bold text-primary leading-tight mb-16">
           私たちについて
         </h2>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-16 items-start">
           {/* プロフィール */}
           <div>
-            <div className="relative w-24 h-24 mb-8 overflow-hidden bg-border">
+            <div className="group relative w-24 h-24 mb-8 overflow-hidden bg-border">
               <Image
                 src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200&q=80"
                 alt="小田 滉太 プロフィール写真"
                 fill
-                className="object-cover grayscale"
+                className="object-cover grayscale transition-all duration-500 ease-out group-hover:grayscale-0 group-hover:scale-105"
               />
             </div>
             <p className="text-xs tracking-[0.2em] text-muted font-sans mb-2 uppercase">
@@ -65,11 +66,11 @@ export default function About() {
           </div>
 
           {/* 社名の由来 */}
-          <div className="border-l border-border pl-12">
+          <div className="border-l-2 border-accent/40 pl-12">
             <p className="text-xs tracking-[0.2em] text-muted font-sans mb-6 uppercase">
               Name Origin
             </p>
-            <h3 className="text-xl font-serif font-semibold text-primary mb-6">
+            <h3 className="text-2xl sm:text-3xl font-serif font-semibold text-primary mb-6">
               「淡間」の由来
             </h3>
             <p className="text-sm sm:text-base text-secondary leading-relaxed font-sans font-light mb-6">

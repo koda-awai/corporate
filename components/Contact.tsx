@@ -27,12 +27,23 @@ export default function Contact() {
       ref={ref}
       className="py-24 sm:py-32 px-6 bg-primary opacity-0 translate-y-6 transition-all duration-700 ease-out"
     >
-      <div className="max-w-2xl mx-auto text-center">
-        <p className="text-xs tracking-[0.3em] text-accent mb-8 font-sans uppercase">
-          Contact
+      <div className="relative max-w-2xl mx-auto text-center">
+        {/* 背景の巨大アウトラインタイポ */}
+        <p
+          aria-hidden="true"
+          className="text-outline-light absolute -top-10 left-1/2 -translate-x-1/2 font-serif font-bold text-[16vw] sm:text-[10rem] leading-none whitespace-nowrap select-none pointer-events-none"
+        >
+          CONTACT
         </p>
-        <h2 className="text-2xl sm:text-3xl font-serif font-semibold text-background mb-6">
-          まずはお気軽にご連絡ください。
+        <p className="relative flex items-center justify-center gap-4 text-xs tracking-[0.3em] text-accent mb-8 font-sans font-medium uppercase">
+          <span aria-hidden="true" className="inline-block w-10 h-px bg-accent" />
+          Contact
+          <span aria-hidden="true" className="inline-block w-10 h-px bg-accent" />
+        </p>
+        <h2 className="relative text-3xl sm:text-5xl font-serif font-bold text-background leading-tight mb-8">
+          まずはお気軽に
+          <br className="sm:hidden" />
+          ご連絡ください<span className="text-accent">。</span>
         </h2>
         <p className="text-sm sm:text-base text-background/60 font-sans font-light leading-relaxed mb-12">
           プロジェクトの相談から、ちょっとした疑問まで。
@@ -45,15 +56,23 @@ export default function Contact() {
             href="https://forms.google.com/dummy"
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-block px-8 py-4 bg-background text-primary text-sm tracking-widest font-sans font-medium hover:bg-background/90 transition-colors duration-200 cursor-pointer focus:outline-none focus:ring-2 focus:ring-background focus:ring-offset-2 focus:ring-offset-primary"
+            className="btn-sweep group inline-flex items-center justify-center gap-3 px-10 py-4 bg-background text-primary text-sm tracking-widest font-sans font-medium hover:text-white transition-colors duration-300 cursor-pointer focus:outline-none focus:ring-2 focus:ring-background focus:ring-offset-2 focus:ring-offset-primary"
+            style={{ "--sweep-color": "#CA8A04" } as React.CSSProperties}
           >
             フォームで相談する
+            <span
+              aria-hidden="true"
+              className="inline-block transition-transform duration-300 ease-out group-hover:translate-x-1.5"
+            >
+              →
+            </span>
           </a>
           <a
             href="https://x.com/dummy"
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 px-8 py-4 border border-background/30 text-background text-sm tracking-widest font-sans font-medium hover:border-background/60 hover:bg-background/10 transition-colors duration-200 cursor-pointer focus:outline-none focus:ring-2 focus:ring-background focus:ring-offset-2 focus:ring-offset-primary"
+            className="btn-sweep inline-flex items-center justify-center gap-2 px-10 py-4 border border-background/30 text-background text-sm tracking-widest font-sans font-medium hover:border-background transition-colors duration-300 cursor-pointer focus:outline-none focus:ring-2 focus:ring-background focus:ring-offset-2 focus:ring-offset-primary"
+            style={{ "--sweep-color": "rgba(248, 247, 244, 0.12)" } as React.CSSProperties}
             aria-label="X（旧Twitter）でフォローする"
           >
             <svg

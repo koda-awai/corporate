@@ -53,12 +53,23 @@ function StrengthCard({
   return (
     <div
       ref={ref}
-      className="opacity-0 translate-y-8 transition-all duration-700 ease-out border-t border-border pt-10 pb-4"
+      className="group relative opacity-0 translate-y-8 transition-all duration-700 ease-out border-t border-border pt-10 pb-4"
     >
+      {/* ホバーで上罫線がアクセント色に伸びる */}
+      <span
+        aria-hidden="true"
+        className="absolute top-[-1px] left-0 h-[2px] w-0 bg-accent transition-all duration-500 ease-out group-hover:w-full"
+      />
+      <p
+        aria-hidden="true"
+        className="font-serif text-6xl sm:text-7xl font-bold leading-none text-primary/10 mb-6 transition-colors duration-500 group-hover:text-accent/30"
+      >
+        {String(index + 1).padStart(2, "0")}
+      </p>
       <p className="text-xs tracking-[0.25em] text-accent font-sans font-medium mb-4 uppercase">
         {item.label}
       </p>
-      <h3 className="text-xl sm:text-2xl font-serif font-semibold text-primary mb-4 leading-snug">
+      <h3 className="text-2xl sm:text-3xl font-serif font-semibold text-primary mb-4 leading-snug">
         {item.title}
       </h3>
       <p className="text-sm sm:text-base text-secondary leading-relaxed font-sans font-light max-w-sm">
@@ -94,10 +105,11 @@ export default function Strengths() {
           ref={headingRef}
           className="opacity-0 translate-y-4 transition-all duration-700 ease-out mb-16"
         >
-          <p className="text-xs tracking-[0.3em] text-muted mb-4 font-sans uppercase">
+          <p className="flex items-center gap-4 text-xs tracking-[0.3em] text-accent mb-5 font-sans font-medium uppercase">
+            <span aria-hidden="true" className="inline-block w-10 h-px bg-accent" />
             Strengths
           </p>
-          <h2 className="text-2xl sm:text-3xl font-serif font-semibold text-primary">
+          <h2 className="text-3xl sm:text-5xl font-serif font-bold text-primary leading-tight">
             選ばれる3つの理由
           </h2>
         </div>
