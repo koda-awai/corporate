@@ -2,19 +2,26 @@
 
 株式会社淡間 コーポレートサイト（Next.js + Tailwind CSS）のコンポーネント仕様書。
 
+デザインコンセプトは社名の由来である**「あわい（淡い・間）」**。
+墨（すみ）× 生成り（きなり）× 朱（しゅ）の和のパレットと、明朝体（Shippori Mincho）による
+エディトリアルなレイアウトで「思いと形のあいだ」を表現する。
+
 ---
 
 ## 目次
 
 1. [デザイントークン](#デザイントークン)
-2. [Header](#header)
-3. [Hero](#hero)
-4. [Strengths](#strengths)
-5. [Works](#works)
-6. [About](#about)
-7. [Contact](#contact)
-8. [Footer](#footer)
-9. [グローバルスタイル](#グローバルスタイル)
+2. [Reveal（共通アニメーション）](#reveal共通アニメーション)
+3. [Header](#header)
+4. [Hero](#hero)
+5. [Marquee](#marquee)
+6. [Philosophy](#philosophy)
+7. [Strengths](#strengths)
+8. [Works](#works)
+9. [About](#about)
+10. [Contact](#contact)
+11. [Footer](#footer)
+12. [グローバルスタイル](#グローバルスタイル)
 
 ---
 
@@ -24,22 +31,24 @@
 
 ### カラー
 
-| トークン名    | 値          | 用途                               |
-| ------------ | ----------- | ---------------------------------- |
-| `primary`    | `#0F172A`   | メインテキスト・背景（ダーク）     |
-| `secondary`  | `#334155`   | サブテキスト                       |
-| `accent`     | `#CA8A04`   | アクセント（ラベル・バッジ）       |
-| `background` | `#F8F7F4`   | ページ背景色（和紙調オフホワイト） |
-| `foreground` | `#020617`   | 最も濃いテキスト                   |
-| `muted`      | `#64748B`   | 補助テキスト・ラベル               |
-| `border`     | `#E2E8F0`   | ボーダー・区切り線                 |
+| トークン名    | 値          | 用途                                     |
+| ------------ | ----------- | ---------------------------------------- |
+| `primary`    | `#1B1B20`   | メインテキスト・ボタン（墨色）           |
+| `secondary`  | `#4C4B50`   | サブテキスト                             |
+| `accent`     | `#B33A1C`   | アクセント（朱色：ラベル・罫線・句点）   |
+| `background` | `#F5F2EA`   | ページ背景色（生成り・和紙調）           |
+| `foreground` | `#17171B`   | 最も濃いテキスト                         |
+| `muted`      | `#8C8779`   | 補助テキスト・ラベル                     |
+| `border`     | `#DFD9C9`   | ボーダー・区切り線                       |
+| `ink`        | `#141419`   | ダークセクション背景（Philosophy/Contact/Footer） |
+| `surface`    | `#FBF9F3`   | 明るめのセクション背景（Works）          |
 
 ### フォント
 
-| トークン名 | フォントファミリー                | 用途                           |
-| --------- | -------------------------------- | ------------------------------ |
-| `serif`   | Noto Serif JP, serif             | 見出し（h1/h2/h3）・ロゴ       |
-| `sans`    | Noto Sans JP, sans-serif         | 本文・ラベル・ナビゲーション   |
+| トークン名 | フォントファミリー                        | 用途                         |
+| --------- | ---------------------------------------- | ---------------------------- |
+| `serif`   | Shippori Mincho, Noto Serif JP, serif    | 見出し（h1/h2/h3）・ロゴ・装飾 |
+| `sans`    | Noto Sans JP, sans-serif                 | 本文・ラベル・ナビゲーション |
 
 ### アニメーション
 
@@ -47,6 +56,30 @@
 | -------------- | ------------------------------------------------- |
 | `fade-in`      | `opacity: 0 → 1`（0.8s ease-out）                |
 | `fade-in-up`   | `opacity: 0, translateY(24px) → 1, 0`（0.8s）    |
+| `marquee`      | `translateX(0 → -50%)`（40s linear infinite）    |
+
+---
+
+## Reveal（共通アニメーション）
+
+**ファイル:** [components/Reveal.tsx](../components/Reveal.tsx)
+
+スクロールで要素が表示領域に入ったらフェードイン＋スライドアップさせる共通ラッパー。
+各セクションで重複していた IntersectionObserver 処理を集約したもの。
+
+### Props
+
+| 名前        | 型          | デフォルト | 説明                                   |
+| ----------- | ----------- | ---------- | -------------------------------------- |
+| `children`  | `ReactNode` | —          | 表示する要素                           |
+| `delay`     | `number`    | `0`        | 表示開始の遅延（ms）。stagger 表示用   |
+| `className` | `string`    | `""`       | 追加クラス                             |
+
+### 挙動
+
+- IntersectionObserver（`threshold: 0.12`）で `opacity-0 translate-y-8` → `opacity-100 translate-y-0`
+- 一度表示されたら observer を破棄（再アニメーションしない）
+- `transition-all duration-700 ease-out`
 
 ---
 
@@ -56,47 +89,27 @@
 
 ### 概要
 
-画面上部に固定されるナビゲーションバー。ロゴと各セクションへのアンカーリンクを持つ。
-
-### 表示仕様
-
-- `position: fixed`、画面上部から `top-4` の位置に配置
-- `z-index: 50` で最前面表示
-- 左右・上部に余白（`left-4 right-4`）を設けてフローティング表示
-- `max-w-5xl` でコンテンツ幅を制限、中央寄せ
+画面上部に固定されるナビゲーションバー。初期状態は透明で、40px スクロールすると
+生成り半透明＋ブラー＋下ボーダーに変化する。
 
 ### レイアウト
 
 ```
-[ ロゴ（淡間） ]  ............  [ 強み | 実績 | About | お問い合わせ ]
+[ 淡間  AWAMA INC. ]  ......  [ 理念 | 強み | 実績 | 私たち ]  [ お問い合わせ ]
 ```
 
-- ロゴは左、ナビリンクは右
-- ナビリンクは `sm:` 以上で表示（モバイルでは非表示）
-
-### スタイル
-
-| 要素         | スタイル                                                      |
-| ------------ | ------------------------------------------------------------- |
-| nav 背景     | `bg-background/90` + `backdrop-blur-sm`（半透明ブラー）       |
-| ボーダー     | `border border-border`                                        |
-| ロゴ         | `font-serif`, `text-base`, `font-semibold`, `tracking-wide`  |
-| ナビリンク   | `text-xs`, `tracking-[0.15em]`, `text-secondary`             |
-| ホバー       | ロゴ: `opacity-70` / リンク: `text-primary`（duration-200）  |
-| フォーカス   | `focus:ring-2 focus:ring-primary`（アクセシビリティ対応）    |
+- ナビリンクは `sm:` 以上で表示（モバイルではロゴと CTA のみ）
+- 「お問い合わせ」は枠線ボタン（`btn-sweep` で墨色に塗り込まれるホバー）
 
 ### ナビゲーション項目
 
-| ラベル       | href         |
-| ------------ | ------------ |
-| 強み         | `#strengths` |
-| 実績         | `#works`     |
-| About        | `#about`     |
-| お問い合わせ | `#contact`   |
-
-### Props
-
-なし（静的コンポーネント）
+| ラベル       | href          |
+| ------------ | ------------- |
+| 理念         | `#philosophy` |
+| 強み         | `#strengths`  |
+| 実績         | `#works`      |
+| 私たち       | `#about`      |
+| お問い合わせ | `#contact`（CTAボタン） |
 
 ---
 
@@ -106,64 +119,56 @@
 
 ### 概要
 
-トップページのファーストビューを占める全画面セクション。キャッチコピー・2つのCTAボタン・スクロールインジケーター・パーティクルアニメーションで構成。
+全画面のファーストビュー。左寄せの大型明朝見出しによるエディトリアルなレイアウト。
 
-### 表示仕様
+### 構成要素
 
-- `min-height: 100vh` で画面全体を占有
-- 格子線パターン（`.hero-grid`）を背景に持つ
-- Canvasでパーティクルを描画
-
-### レイアウト
-
-```
-┌─────────────────────────────────────┐
-│  [パーティクルCanvas（背景）]       │
-│                                     │
-│         Awama Inc.                  │
-│    あわい、から始める。             │
-│    思いと形の間に入り、本質から作る。│
-│                                     │
-│  [ お問い合わせ ]  [ 実績を見る ]   │
-│                                     │
-│            ↓ scroll                 │
-└─────────────────────────────────────┘
-```
+- 背景右側に巨大な「間」の文字（`text-primary/[0.05]`・装飾・`aria-hidden`）
+- `.ink-wash`（墨のにじみ風ラジアルグラデーション）を背景に重ねる
+- 右端に縦書きコピー「白と黒の、そのあわいに立つ」（`lg:` 以上で表示）
+- 見出し:「思いと形の、あわいから。」（句点は朱色）
+- CTA: お問い合わせ（墨塗り・朱スイープ）/ 実績を見る（枠線・墨スイープ）
+- 左下にスクロールインジケーター、右下に英字コピー
 
 ### アニメーション
 
-#### フェードイン（IntersectionObserver）
+- IntersectionObserver（`threshold: 0.1`）でセクション全体がフェードイン（duration-1000）
+- 旧デザインのパーティクル Canvas は廃止
 
-- 初期状態: `opacity-0 translate-y-6`
-- セクションが `threshold: 0.1` で viewport に入ると `opacity-100` に遷移
-- `transition-all duration-1000 ease-out`
+---
 
-#### パーティクル（Canvas）
+## Marquee
 
-- 25個のパーティクルをランダム配置
-- `vx`, `vy`: ±0.125 の速度でランダムに漂う
-- 半径: 0.4〜1.6px、不透明度: 0.12〜0.27
-- 画面端に達すると反対側から再出現（トーラス型ループ）
-- `prefers-reduced-motion: reduce` が設定されている場合は描画しない
-- Canvasサイズは親要素の `ResizeObserver` で自動追従
+**ファイル:** [components/Marquee.tsx](../components/Marquee.tsx)
 
-### CTAボタン
+### 概要
 
-| ボタン             | href       | スタイル                                    |
-| ------------------ | ---------- | ------------------------------------------- |
-| お問い合わせ       | `#contact` | `bg-primary text-background`（塗りつぶし）  |
-| 実績を見る         | `#works`   | `border border-primary text-primary`（枠線）|
+提供サービス名が流れるマーキー。上下ボーダーで挟んだ帯に、大型明朝の淡い文字
+（`text-primary/[0.14]`）を無限ループで流す。
 
-- ホバー時: お問い合わせは `bg-secondary`、実績を見るは `bg-primary text-background` に反転
+- 項目: UI/UX Design / Product Development / Design System / UX Research / Brand Experience
+- 区切りは朱色の「・」
+- 同じ列を2回描画し `-50%` までスライドしてループ（2列目は `aria-hidden`）
 
-### スクロールインジケーター
+---
 
-- テキスト "scroll" + 縦の線（高さ `h-12`、`animate-pulse`）
-- セクション下部中央に `position: absolute` で配置
+## Philosophy
 
-### Props
+**ファイル:** [components/Philosophy.tsx](../components/Philosophy.tsx)
 
-なし（静的コンポーネント）
+### 概要
+
+社名の由来と理念を語るダークセクション（`bg-ink`）。`id="philosophy"`。
+旧デザインで About 内にあった「社名の由来」をブランドの核として独立させたもの。
+
+### 構成要素
+
+- 背景右上に巨大アウトラインタイポ「AWAI」（`.text-outline-light`）
+- 見出し:「淡きあわいに、本質は宿る。」
+- 左カラム: 理念テキスト（白と黒の間。言語と非言語の間。思いと形の間——）
+- 右カラム: **グラデーション帯**（`.gradation-band`）
+  - 生成り → 墨へのグラデーションで「思い」から「形」への遷移を視覚化
+  - 上に「あわい」、下端に「思い」「形」のラベル（装飾・`aria-hidden`）
 
 ---
 
@@ -173,63 +178,31 @@
 
 ### 概要
 
-サービスの強みを3カラムカードで表示するセクション。`id="strengths"` でアンカーリンク対応。
+強みを横組みの番号付きリスト（エディトリアル行）で表示。`id="strengths"`。
 
 ### レイアウト
 
 ```
-Strengths
-選ばれる3つの理由
-
-┌──────────────┐ ┌──────────────┐ ┌──────────────┐
-│ Why first    │ │ Fast Delivery│ │ Cross Insight│
-│ まず、なぜから│ │ 最初の形を、 │ │ 業界を越えた │
-│              │ │ 早く。       │ │ 視点。       │
-│ 説明テキスト │ │ 説明テキスト │ │ 説明テキスト │
-└──────────────┘ └──────────────┘ └──────────────┘
+── 01 ─────────────────────────────────────────
+   01   WHY FIRST              "どう作るか"より"なぜ作るか"...
+        まず、なぜから。
+── 02 ─────────────────────────────────────────
+   02   FAST DELIVERY          最初のドラフトは3営業日以内...
+        最初の形を、早く。
 ```
 
-- モバイル: 1カラム / `md:` 以上: 3カラム（`grid-cols-3 gap-8 md:gap-12`）
+- `md:` 以上で 12 カラムグリッド（番号 2 / 見出し 4 / 本文 6）
+- 行は `border-t`（最終行のみ `border-b` も）で区切る
+- ホバー: 上罫線が朱色に伸びる（`group-hover:w-full`）＋番号が朱色に変化
+- `Reveal` の `delay={index * 120}` で stagger 表示
 
-### データ構造
-
-```ts
-type StrengthItem = {
-  label: string;       // 英語ラベル（例: "Why first"）
-  title: string;       // 日本語見出し
-  description: string; // 説明文
-};
-```
+### データ
 
 | label           | title              |
 | --------------- | ------------------ |
 | Why first       | まず、なぜから。   |
 | Fast Delivery   | 最初の形を、早く。 |
 | Cross Insight   | 業界を越えた視点。 |
-
-### サブコンポーネント: `StrengthCard`
-
-#### Props
-
-| 名前    | 型                    | 説明                   |
-| ------- | --------------------- | ---------------------- |
-| `item`  | `StrengthItem`        | 表示するデータ         |
-| `index` | `number`              | アニメーションの遅延用 |
-
-#### アニメーション
-
-- IntersectionObserver（`threshold: 0.15`）で `opacity-0 translate-y-8` → `opacity-100 translate-y-0`
-- `index * 150ms` のstagger遅延（カード順に段階表示）
-- `transition-all duration-700 ease-out`
-
-#### スタイル
-
-| 要素   | スタイル                                              |
-| ------ | ----------------------------------------------------- |
-| 外枠   | `border-t border-border pt-10 pb-4`（上ボーダーのみ） |
-| ラベル | `text-xs tracking-[0.25em] text-accent uppercase`     |
-| 見出し | `text-xl sm:text-2xl font-serif font-semibold`        |
-| 本文   | `text-sm sm:text-base text-secondary font-light`      |
 
 ---
 
@@ -239,67 +212,21 @@ type StrengthItem = {
 
 ### 概要
 
-支援実績を3カラムカードで表示するセクション。`id="works"` でアンカーリンク対応。背景は `bg-white`。
+支援実績を横組みの行レイアウトで表示。`id="works"`。背景は `bg-surface` ＋上下ボーダー。
 
 ### レイアウト
 
-```
-Works
-支援実績
+- `md:` 以上で 12 カラムグリッド（タグ・業界 3 / 課題・解決策 8 / 番号 1）
+- 行は `border-t` 区切り。ホバーで行背景がわずかに変化＋上罫線が朱色に伸びる
+- タグはホバーで朱色に塗りつぶし反転
 
-┌───────────────┐ ┌───────────────┐ ┌───────────────┐
-│ [UI/UXデザイン]│ │[UXリサーチ・] │ │[デザインシス] │
-│  医療 × SaaS  │ │  HR × スタ... │ │  EC × D2C    │
-│               │ │               │ │               │
-│ 課題タイトル  │ │ 課題タイトル  │ │ 課題タイトル  │
-│ ─────────     │ │ ─────────     │ │ ─────────     │
-│ 解決策テキスト│ │ 解決策テキスト│ │ 解決策テキスト│
-└───────────────┘ └───────────────┘ └───────────────┘
-```
+### データ
 
-- モバイル: 1カラム / `md:` 以上: 3カラム（`grid-cols-3 gap-6`）
-
-### データ構造
-
-```ts
-type WorkItem = {
-  industry: string;  // 業界（例: "医療 × SaaS"）
-  challenge: string; // 課題
-  solution: string;  // 解決策・成果
-  tag: string;       // タグラベル
-};
-```
-
-| tag                 | industry          | 主な成果                     |
-| ------------------- | ----------------- | ---------------------------- |
-| UI/UXデザイン       | 医療 × SaaS       | 診療時間 20% 短縮            |
-| UXリサーチ・設計    | HR × スタートアップ| エントリー完了率 1.8倍       |
-| デザインシステム    | EC × D2C          | 開発工数 40% 削減            |
-
-### サブコンポーネント: `WorkCard`
-
-#### Props
-
-| 名前    | 型          | 説明                   |
-| ------- | ----------- | ---------------------- |
-| `item`  | `WorkItem`  | 表示するデータ         |
-| `index` | `number`    | アニメーションの遅延用 |
-
-#### アニメーション
-
-- Strengths と同様の IntersectionObserver（`threshold: 0.1`）+ `index * 150ms` stagger
-
-#### スタイル
-
-| 要素       | スタイル                                                    |
-| ---------- | ----------------------------------------------------------- |
-| カード外枠 | `bg-white border border-border p-8 sm:p-10`                 |
-| ホバー     | `hover:shadow-sm`                                           |
-| タグ       | `border border-accent text-accent text-xs tracking-widest` |
-| 業界ラベル | `text-xs tracking-[0.2em] text-muted uppercase`            |
-| 課題見出し | `text-base sm:text-lg font-serif font-semibold`            |
-| 区切り線   | `w-8 h-px bg-border`（細い水平線）                          |
-| 解決策     | `text-sm text-secondary font-light`                        |
+| tag                 | industry            | 主な成果               |
+| ------------------- | ------------------- | ---------------------- |
+| UI/UXデザイン       | 医療 × SaaS         | 診療時間 20% 短縮      |
+| UXリサーチ・設計    | HR × スタートアップ | エントリー完了率 1.8倍 |
+| デザインシステム    | EC × D2C            | 開発工数 40% 削減      |
 
 ---
 
@@ -309,44 +236,24 @@ type WorkItem = {
 
 ### 概要
 
-創業者プロフィールと社名の由来を2カラムで紹介するセクション。`id="about"` でアンカーリンク対応。
+創業者プロフィールと会社概要の2カラムセクション。`id="about"`。
+右端に縦書き装飾「あわいに立ち、形に変える」（`lg:` 以上）。
 
-### レイアウト
+### 左カラム: プロフィール
 
-```
-About
-私たちについて
+- `next/image` のポートレート（`max-w-[240px]`, `aspect-[4/5]`）
+- グレースケール表示、ホバーでカラー＋わずかに拡大
+- Founder & Designer 小田 滉太（Kota Oda）＋紹介文
 
-┌──────────────────────┐  │  ┌──────────────────────┐
-│ [プロフィール画像]   │  │  │ Name Origin          │
-│ Founder & Designer   │  │  │「淡間」の由来        │
-│ 小田 滉太           │  │  │                      │
-│ Kota Oda            │  │  │ 説明文...            │
-│                      │  │  │                      │
-│ 説明文...           │  │  │ ─────────────────    │
-└──────────────────────┘  │  │ 所在地: 東京都渋谷区 │
-                           │  └──────────────────────┘
-       左カラム           │         右カラム
-```
+### 右カラム: 会社概要（`<dl>`）
 
-- モバイル: 1カラム / `md:` 以上: 2カラム（`grid-cols-2 gap-16`）
-- 右カラムは `border-l border-border pl-12`（左ボーダー区切り）
+| 項目     | 値                                                     |
+| -------- | ------------------------------------------------------ |
+| 社名     | 株式会社淡間（Awama Inc.）                             |
+| 所在地   | 東京都渋谷区                                           |
+| 事業内容 | UI/UXデザイン・プロダクト開発支援・デザインシステム構築 |
 
-### プロフィール画像
-
-- `next/image` の `<Image>` コンポーネントを使用
-- サイズ: `w-24 h-24`（96×96px）
-- `className="object-cover grayscale"` でグレースケール表示
-- 現在は Unsplash の仮画像を使用
-
-### アニメーション
-
-- IntersectionObserver（`threshold: 0.1`）でセクション全体がフェードイン
-- `opacity-0 translate-y-6` → `opacity-100`（duration-700）
-
-### Props
-
-なし（静的コンポーネント）
+下部に「Name Origin」（社名の由来の要約）を朱色の左ボーダー付きで併記。
 
 ---
 
@@ -356,49 +263,18 @@ About
 
 ### 概要
 
-問い合わせCTAセクション。背景 `bg-primary`（ネイビー）で他セクションと差別化。`id="contact"` でアンカーリンク対応。
-
-### レイアウト
-
-```
-┌────────────────────────────────────────┐  ← bg-primary（ネイビー）
-│              Contact                   │
-│    まずはお気軽にご連絡ください。      │
-│    説明文...                           │
-│                                        │
-│  [ フォームで相談する ]  [ X でつながる ]│
-└────────────────────────────────────────┘
-```
-
-- `max-w-2xl` で中央寄せ、テキストは `text-center`
+問い合わせ CTA セクション。背景 `bg-ink`。`id="contact"`。
+背景に巨大アウトラインタイポ「CONTACT」（`.text-outline-light`）。
 
 ### CTAボタン
 
-| ボタン              | リンク先               | スタイル                                            |
-| ------------------- | ---------------------- | --------------------------------------------------- |
-| フォームで相談する  | Google Forms（外部）   | `bg-background text-primary`（白塗りつぶし）        |
-| X でつながる        | X.com（外部）          | `border border-background/30 text-background`（枠線）|
+| ボタン              | リンク先             | スタイル                                        |
+| ------------------- | -------------------- | ----------------------------------------------- |
+| フォームで相談する  | Google Forms（外部） | `bg-background text-primary` ＋朱スイープホバー |
+| X でつながる        | X.com（外部）        | `border border-background/30` ＋淡色スイープ    |
 
-- どちらも `target="_blank" rel="noopener noreferrer"` で安全な外部リンク
-- X ボタンは SVG アイコン付き（`aria-hidden="true"`）
+- どちらも `target="_blank" rel="noopener noreferrer"`
 - X ボタンには `aria-label="X（旧Twitter）でフォローする"` を設定
-
-### カラー（背景が primary のため反転）
-
-| 要素           | 値                      |
-| -------------- | ----------------------- |
-| ラベルテキスト | `text-accent`           |
-| 見出し         | `text-background`       |
-| 本文           | `text-background/60`    |
-
-### アニメーション
-
-- IntersectionObserver（`threshold: 0.1`）でフェードイン
-- `opacity-0 translate-y-6` → `opacity-100`（duration-700）
-
-### Props
-
-なし（静的コンポーネント）
 
 ---
 
@@ -406,34 +282,15 @@ About
 
 **ファイル:** [components/Footer.tsx](../components/Footer.tsx)
 
-### 概要
-
-シンプルなフッター。Contact セクションと同じ `bg-primary` 背景で連続感を持たせる。
-
 ### レイアウト
 
 ```
-[ 株式会社淡間 ]  ........  [ © 2025 Awama Inc. All rights reserved. ]
+[ 淡間  AWAMA INC. ]  ...  [ © 2026 Awama Inc. ]  ...  [ BACK TO TOP ↑ ]
 ```
 
-- モバイル: 縦積み（`flex-col`）/ `sm:` 以上: 横並び（`flex-row`）
-- 左: 社名ロゴ / 右: コピーライト
-
-### スタイル
-
-| 要素         | スタイル                                        |
-| ------------ | ----------------------------------------------- |
-| 背景         | `bg-primary border-t border-white/10`           |
-| 社名         | `font-serif text-sm text-background/60`         |
-| コピーライト | `text-xs text-background/40 font-light`         |
-
-### 動的コンテンツ
-
-- コピーライト年: `new Date().getFullYear()` で自動更新
-
-### Props
-
-なし（静的コンポーネント）
+- 背景 `bg-ink border-t border-white/10`（Contact と連続）
+- コピーライト年は `new Date().getFullYear()` で自動更新
+- 右端に「Back to top」リンク（`href="#"`）
 
 ---
 
@@ -445,56 +302,30 @@ About
 
 | 要素       | 設定                                                  |
 | ---------- | ----------------------------------------------------- |
-| `html`     | `scroll-behavior: smooth`（スムーズスクロール）       |
-| `body`     | `bg-background`, `color: foreground`, `line-height: 1.75` |
-| `h1~h3`   | `font-family: Noto Serif JP`, `font-feature-settings: "palt"`, `letter-spacing: 0.05em` |
+| `html`     | `scroll-behavior: smooth`                             |
+| `body`     | `bg: #F5F2EA`, `color: #17171B`, `line-height: 1.9`  |
+| `h1~h3`   | `Shippori Mincho`, `font-feature-settings: "palt"`, `letter-spacing: 0.04em` |
+| `::selection` | 朱色背景（`#B33A1C`）× 生成り文字                  |
 
 ### 和紙テクスチャオーバーレイ
 
-`body::before` でSVGノイズフィルターを全画面に固定オーバーレイ。
+`body::before` で SVG ノイズフィルターを全画面に固定オーバーレイ（`opacity: 0.10`）。
 
-- `position: fixed; inset: 0; z-index: 9999`
-- `pointer-events: none`（インタラクション阻害なし）
-- SVG `feTurbulence`（`fractalNoise`, `baseFrequency: 0.75`, `numOctaves: 4`）+ `feColorMatrix`（グレースケール）
-- `opacity: 0.12` で控えめな質感
+### ユーティリティ
 
-### セクション区切り線
-
-```css
-section + section {
-  border-top: 1px solid rgba(26, 26, 26, 0.1);
-}
-```
-
-隣接セクション間に細い区切り線を自動付与。
-
-### `.hero-grid` ユーティリティ
-
-Hero セクション背景の格子線パターン。
-
-```css
-background-image:
-  linear-gradient(rgba(26, 26, 26, 0.04) 1px, transparent 1px),
-  linear-gradient(90deg, rgba(26, 26, 26, 0.04) 1px, transparent 1px);
-background-size: 60px 60px;
-```
-
-### アニメーション遅延ユーティリティ
-
-`.animate-delay-100` 〜 `.animate-delay-400`（100ms 刻み）
+| クラス            | 用途                                                       |
+| ----------------- | ---------------------------------------------------------- |
+| `.text-vertical`  | 縦書き（`writing-mode: vertical-rl`）                      |
+| `.ink-wash`       | 墨のにじみ風の淡いラジアルグラデーション背景               |
+| `.gradation-band` | 生成り → 墨の水平グラデーション帯（Philosophy の象徴表現） |
+| `.btn-sweep`      | 背景が左から塗り込まれるボタンホバー（`--sweep-color`）    |
+| `.link-underline` | 下線が左から引かれるリンクホバー                           |
+| `.text-outline` / `.text-outline-light` | 巨大アウトライン文字（背景装飾）     |
+| `.animate-delay-100〜400` | アニメーション遅延（100ms 刻み）                   |
 
 ### `prefers-reduced-motion` 対応
 
-```css
-@media (prefers-reduced-motion: reduce) {
-  *, *::before, *::after {
-    animation-duration: 0.01ms !important;
-    transition-duration: 0.01ms !important;
-  }
-}
-```
-
-全アニメーション・トランジションを実質無効化。Hero のパーティクルも個別に `matchMedia` でチェック済み。
+全アニメーション・トランジションを実質無効化（0.01ms に短縮）。
 
 ---
 
@@ -506,15 +337,19 @@ background-size: 60px 60px;
 
 ```
 <main>
-  <Header />    ← fixed（常時表示）
-  <Hero />      ← min-h-screen（全画面ファーストビュー）
-  <Strengths /> ← id="strengths"
-  <Works />     ← id="works"
-  <About />     ← id="about"
-  <Contact />   ← id="contact"
-  <Footer />
+  <Header />     ← fixed（常時表示）
+  <Hero />       ← min-h-screen（全画面ファーストビュー）
+  <Marquee />    ← サービス名マーキー帯
+  <Philosophy /> ← id="philosophy"（ダーク）
+  <Strengths />  ← id="strengths"
+  <Works />      ← id="works"（surface 背景）
+  <About />      ← id="about"
+  <Contact />    ← id="contact"（ダーク）
+  <Footer />     ← ダーク（Contact と連続）
 </main>
 ```
+
+明 → 暗 → 明 → 暗のリズムで「あわい（グラデーション）」の往復を構成する。
 
 ### メタデータ（layout.tsx）
 

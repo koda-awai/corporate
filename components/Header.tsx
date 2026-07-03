@@ -2,6 +2,13 @@
 
 import { useEffect, useState } from "react";
 
+const navItems = [
+  { href: "#philosophy", label: "理念" },
+  { href: "#strengths", label: "強み" },
+  { href: "#works", label: "実績" },
+  { href: "#about", label: "私たち" },
+];
+
 export default function Header() {
   const [scrolled, setScrolled] = useState(false);
 
@@ -13,35 +20,51 @@ export default function Header() {
   }, []);
 
   return (
-    <header className="fixed top-4 left-4 right-4 z-50">
+    <header
+      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
+        scrolled
+          ? "bg-background/85 backdrop-blur-md border-b border-border"
+          : "bg-transparent border-b border-transparent"
+      }`}
+    >
       <nav
-        className={`max-w-5xl mx-auto flex items-center justify-between px-6 bg-background/90 backdrop-blur-sm border border-border transition-all duration-300 ${
-          scrolled ? "py-3 shadow-[0_8px_30px_rgba(15,23,42,0.08)]" : "py-4"
+        className={`max-w-6xl mx-auto flex items-center justify-between px-6 sm:px-10 transition-all duration-300 ${
+          scrolled ? "py-4" : "py-6"
         }`}
       >
         <a
           href="#"
-          className="font-serif text-base font-semibold text-primary tracking-wide hover:opacity-70 transition-opacity duration-200 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-1"
+          className="group flex items-baseline gap-3 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
         >
-          淡間
+          <span className="font-serif text-lg font-semibold text-primary tracking-[0.2em] group-hover:opacity-70 transition-opacity duration-200">
+            淡間
+          </span>
+          <span className="hidden sm:inline text-[10px] tracking-[0.3em] text-muted font-sans uppercase">
+            Awama Inc.
+          </span>
         </a>
-        <ul className="hidden sm:flex items-center gap-8">
-          {[
-            { href: "#strengths", label: "強み" },
-            { href: "#works", label: "実績" },
-            { href: "#about", label: "About" },
-            { href: "#contact", label: "お問い合わせ" },
-          ].map((item) => (
-            <li key={item.href}>
-              <a
-                href={item.href}
-                className="link-underline text-xs tracking-[0.15em] text-secondary hover:text-primary transition-colors duration-200 cursor-pointer focus:outline-none font-sans"
-              >
-                {item.label}
-              </a>
-            </li>
-          ))}
-        </ul>
+
+        <div className="flex items-center gap-8">
+          <ul className="hidden sm:flex items-center gap-8">
+            {navItems.map((item) => (
+              <li key={item.href}>
+                <a
+                  href={item.href}
+                  className="link-underline text-xs tracking-[0.2em] text-secondary hover:text-primary transition-colors duration-200 cursor-pointer focus:outline-none font-sans"
+                >
+                  {item.label}
+                </a>
+              </li>
+            ))}
+          </ul>
+          <a
+            href="#contact"
+            className="btn-sweep inline-flex items-center gap-2 px-5 py-2.5 border border-primary text-primary text-xs tracking-[0.2em] font-sans font-medium hover:text-background transition-colors duration-300 cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
+            style={{ "--sweep-color": "#1B1B20" } as React.CSSProperties}
+          >
+            お問い合わせ
+          </a>
+        </div>
       </nav>
     </header>
   );

@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700&family=Noto+Serif+JP:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@400;500;600;700&family=Noto+Sans+JP:wght@300;400;500;700&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -10,16 +10,16 @@
   }
 
   body {
-    background-color: #F8F7F4;
-    color: #020617;
+    background-color: #F5F2EA;
+    color: #17171B;
     font-family: 'Noto Sans JP', sans-serif;
-    line-height: 1.75;
+    line-height: 1.9;
     font-size: 16px;
   }
 
   ::selection {
-    background-color: #CA8A04;
-    color: #F8F7F4;
+    background-color: #B33A1C;
+    color: #F5F2EA;
   }
 
   /* 和紙テクスチャ：SVGノイズフィルターを全面にオーバーレイ */
@@ -29,32 +29,35 @@
     inset: 0;
     pointer-events: none;
     z-index: 9999;
-    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.12'/%3E%3C/svg%3E");
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.10'/%3E%3C/svg%3E");
     background-size: 256px 256px;
     background-repeat: repeat;
   }
 
   h1, h2, h3 {
-    font-family: 'Noto Serif JP', serif;
+    font-family: 'Shippori Mincho', 'Noto Serif JP', serif;
     font-feature-settings: "palt";
-    letter-spacing: 0.05em;
-  }
-}
-
-@layer base {
-  /* セクション間の細い区切り線（余白に自然に溶け込む形で） */
-  section + section {
-    border-top: 1px solid rgba(26, 26, 26, 0.1);
+    letter-spacing: 0.04em;
   }
 }
 
 @layer utilities {
-  /* Heroセクション：格子線パターン */
-  .hero-grid {
+  /* 縦書きテキスト（見出し・装飾用） */
+  .text-vertical {
+    writing-mode: vertical-rl;
+    text-orientation: mixed;
+  }
+
+  /* 墨のにじみ：淡いラジアルグラデーション */
+  .ink-wash {
     background-image:
-      linear-gradient(rgba(26, 26, 26, 0.04) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(26, 26, 26, 0.04) 1px, transparent 1px);
-    background-size: 60px 60px;
+      radial-gradient(ellipse 60% 50% at 15% 20%, rgba(27, 27, 32, 0.05), transparent 70%),
+      radial-gradient(ellipse 50% 60% at 90% 80%, rgba(27, 27, 32, 0.04), transparent 70%);
+  }
+
+  /* 「あわい」のグラデーション帯：生成り → 墨 */
+  .gradation-band {
+    background-image: linear-gradient(to right, #F5F2EA 0%, #B8B2A4 50%, #141419 100%);
   }
 
   /* ボタン：背景が左から塗り込まれるスイープホバー
@@ -69,7 +72,7 @@
     position: absolute;
     inset: 0;
     z-index: -1;
-    background-color: var(--sweep-color, #CA8A04);
+    background-color: var(--sweep-color, #B33A1C);
     transform: scaleX(0);
     transform-origin: left center;
     transition: transform 0.45s cubic-bezier(0.22, 1, 0.36, 1);
@@ -103,11 +106,11 @@
 
   /* 見出し背景の巨大アウトライン文字 */
   .text-outline {
-    -webkit-text-stroke: 1px rgba(15, 23, 42, 0.14);
+    -webkit-text-stroke: 1px rgba(27, 27, 32, 0.14);
     color: transparent;
   }
   .text-outline-light {
-    -webkit-text-stroke: 1px rgba(248, 247, 244, 0.16);
+    -webkit-text-stroke: 1px rgba(245, 242, 234, 0.16);
     color: transparent;
   }
 

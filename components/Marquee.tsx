@@ -16,11 +16,11 @@ export default function Marquee() {
       {items.map((item) => (
         <li
           key={item}
-          className="flex items-center gap-10 px-5 text-sm sm:text-base tracking-[0.25em] font-sans font-light text-background/80 uppercase whitespace-nowrap"
+          className="flex items-center gap-12 px-6 font-serif text-4xl sm:text-6xl font-medium text-primary/[0.14] tracking-wide whitespace-nowrap"
         >
           {item}
-          <span aria-hidden="true" className="text-accent text-xs">
-            ◆
+          <span aria-hidden="true" className="text-accent/60 text-lg">
+            ・
           </span>
         </li>
       ))}
@@ -30,7 +30,7 @@ export default function Marquee() {
   return (
     <section
       aria-label="提供サービス"
-      className="bg-primary py-5 overflow-hidden"
+      className="border-y border-border py-10 sm:py-12 overflow-hidden"
     >
       <div className="flex w-max animate-marquee">
         {row(false)}

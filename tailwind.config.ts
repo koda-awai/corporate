@@ -9,22 +9,24 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        primary: "#0F172A",
-        secondary: "#334155",
-        accent: "#CA8A04",
-        background: "#F8F7F4",
-        foreground: "#020617",
-        muted: "#64748B",
-        border: "#E2E8F0",
+        primary: "#1B1B20",
+        secondary: "#4C4B50",
+        accent: "#B33A1C",
+        background: "#F5F2EA",
+        foreground: "#17171B",
+        muted: "#8C8779",
+        border: "#DFD9C9",
+        ink: "#141419",
+        surface: "#FBF9F3",
       },
       fontFamily: {
-        serif: ["Noto Serif JP", "serif"],
+        serif: ["Shippori Mincho", "Noto Serif JP", "serif"],
         sans: ["Noto Sans JP", "sans-serif"],
       },
       animation: {
         "fade-in": "fadeIn 0.8s ease-out forwards",
         "fade-in-up": "fadeInUp 0.8s ease-out forwards",
-        marquee: "marquee 32s linear infinite",
+        marquee: "marquee 40s linear infinite",
       },
       keyframes: {
         fadeIn: {

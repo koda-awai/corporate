@@ -1,6 +1,7 @@
 import Header from "@/components/Header";
 import Hero from "@/components/Hero";
 import Marquee from "@/components/Marquee";
+import Philosophy from "@/components/Philosophy";
 import Strengths from "@/components/Strengths";
 import Works from "@/components/Works";
 import About from "@/components/About";
@@ -13,6 +14,7 @@ export default function Home() {
       <Header />
       <Hero />
       <Marquee />
+      <Philosophy />
       <Strengths />
       <Works />
       <About />

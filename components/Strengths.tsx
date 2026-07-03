@@ -1,6 +1,4 @@
-"use client";
-
-import { useEffect, useRef } from "react";
+import Reveal from "./Reveal";
 
 const strengths = [
   {
@@ -23,100 +21,48 @@ const strengths = [
   },
 ];
 
-function StrengthCard({
-  item,
-  index,
-}: {
-  item: (typeof strengths)[0];
-  index: number;
-}) {
-  const ref = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    const el = ref.current;
-    if (!el) return;
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setTimeout(() => {
-            el.classList.add("opacity-100", "translate-y-0");
-            el.classList.remove("opacity-0", "translate-y-8");
-          }, index * 150);
-        }
-      },
-      { threshold: 0.15 }
-    );
-    observer.observe(el);
-    return () => observer.disconnect();
-  }, [index]);
-
-  return (
-    <div
-      ref={ref}
-      className="group relative opacity-0 translate-y-8 transition-all duration-700 ease-out border-t border-border pt-10 pb-4"
-    >
-      {/* ホバーで上罫線がアクセント色に伸びる */}
-      <span
-        aria-hidden="true"
-        className="absolute top-[-1px] left-0 h-[2px] w-0 bg-accent transition-all duration-500 ease-out group-hover:w-full"
-      />
-      <p
-        aria-hidden="true"
-        className="font-serif text-6xl sm:text-7xl font-bold leading-none text-primary/10 mb-6 transition-colors duration-500 group-hover:text-accent/30"
-      >
-        {String(index + 1).padStart(2, "0")}
-      </p>
-      <p className="text-xs tracking-[0.25em] text-accent font-sans font-medium mb-4 uppercase">
-        {item.label}
-      </p>
-      <h3 className="text-2xl sm:text-3xl font-serif font-semibold text-primary mb-4 leading-snug">
-        {item.title}
-      </h3>
-      <p className="text-sm sm:text-base text-secondary leading-relaxed font-sans font-light max-w-sm">
-        {item.description}
-      </p>
-    </div>
-  );
-}
-
 export default function Strengths() {
-  const headingRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    const el = headingRef.current;
-    if (!el) return;
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          el.classList.add("opacity-100");
-          el.classList.remove("opacity-0", "translate-y-4");
-        }
-      },
-      { threshold: 0.2 }
-    );
-    observer.observe(el);
-    return () => observer.disconnect();
-  }, []);
-
   return (
-    <section id="strengths" className="py-24 sm:py-32 px-6">
-      <div className="max-w-5xl mx-auto">
-        <div
-          ref={headingRef}
-          className="opacity-0 translate-y-4 transition-all duration-700 ease-out mb-16"
-        >
-          <p className="flex items-center gap-4 text-xs tracking-[0.3em] text-accent mb-5 font-sans font-medium uppercase">
+    <section id="strengths" className="py-28 sm:py-40 px-6 sm:px-10">
+      <div className="max-w-6xl mx-auto">
+        <Reveal className="mb-20">
+          <p className="flex items-center gap-4 text-xs tracking-[0.3em] text-accent mb-6 font-sans font-medium uppercase">
             <span aria-hidden="true" className="inline-block w-10 h-px bg-accent" />
             Strengths
           </p>
-          <h2 className="text-3xl sm:text-5xl font-serif font-bold text-primary leading-tight">
+          <h2 className="text-3xl sm:text-5xl font-serif font-semibold text-primary leading-tight">
             選ばれる3つの理由
           </h2>
-        </div>
+        </Reveal>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-12">
+        <div>
           {strengths.map((item, i) => (
-            <StrengthCard key={item.label} item={item} index={i} />
+            <Reveal key={item.label} delay={i * 120}>
+              <div className="group relative border-t border-border last:border-b py-12 sm:py-14 grid grid-cols-1 md:grid-cols-12 gap-6 md:gap-10 items-start">
+                {/* ホバーで上罫線がアクセント色に伸びる */}
+                <span
+                  aria-hidden="true"
+                  className="absolute top-[-1px] left-0 h-[2px] w-0 bg-accent transition-all duration-500 ease-out group-hover:w-full"
+                />
+                <p
+                  aria-hidden="true"
+                  className="md:col-span-2 font-serif text-6xl sm:text-7xl font-semibold leading-none text-primary/10 transition-colors duration-500 group-hover:text-accent/40"
+                >
+                  {String(i + 1).padStart(2, "0")}
+                </p>
+                <div className="md:col-span-4">
+                  <p className="text-xs tracking-[0.25em] text-accent font-sans font-medium mb-3 uppercase">
+                    {item.label}
+                  </p>
+                  <h3 className="text-2xl sm:text-3xl font-serif font-semibold text-primary leading-snug">
+                    {item.title}
+                  </h3>
+                </div>
+                <p className="md:col-span-6 text-sm sm:text-base text-secondary leading-loose font-sans font-light md:pt-2">
+                  {item.description}
+                </p>
+              </div>
+            </Reveal>
           ))}
         </div>
       </div>
